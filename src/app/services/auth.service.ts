@@ -9,8 +9,7 @@ export class AuthService {
   }
 
   login(credentials) { 
-   return this.http.post('/api/authenticate', 
-      JSON.stringify(credentials))
+   return this.http.post('/api/authenticate', JSON.stringify(credentials))
       .map(response => {
         let result = response.json();
         if (result && result.token) {
@@ -27,6 +26,14 @@ export class AuthService {
 
   isLoggedIn() { 
     return tokenNotExpired();
+  }
+
+  get currentUser() {
+    let token = localStorage.getItem('token');
+    if (!token) return null;
+
+    let jwtHelper = new JwtHelper();
+    return jwtHelper.decodeToken(token);
   }
 }
 
